@@ -1,140 +1,168 @@
-# Fourth Assignment: Steam Scraper 🎮
+# Video Game Scraper Project
 
-## Introduction 
+## Overview
+This project is a Java application that demonstrates HTML parsing and data manipulation techniques. It extracts video game information from an HTML document, stores it in a structured format, and provides various ways to sort, filter, and analyze the data. The application includes a graphical user interface for interactive exploration and database integration for persistent storage.
 
-This project delves into the practical application of HTML parsing techniques using Java and the JSoup library. The objective is to extract and manipulate data from a structured HTML document containing information about various video-games. Key tasks include parsing the document, creating Java objects to represent the data, sorting the information based on different criteria, and presenting the results effectively.
+## Features
 
-## Why Learn Web Scraping? 📊
+### Core Features
+- HTML parsing using JSoup to extract game data (name, rating, price)
+- Object-oriented representation of video games
+- Multiple sorting algorithms (by name, rating, price)
+- Clean console output for sorted data
 
-Mastering web scraping empowers individuals and businesses to glean valuable insights, automate tasks, and make informed decisions based on real-time data.
+### Bonus Features
+1. **Extended Data Extraction**
+   - Support for scraping data from additional sources (Oscar-winning films)
+   - Flexible data model to accommodate various types of media
 
-- In e-commerce, web scraping aids in monitoring competitors' prices, tracking product availability, and gathering customer reviews. In finance, it facilitates trend analysis, investment decisions, and risk assessment.
+2. **Interactive User Interface**
+   - Swing-based GUI for data exploration
+   - Dynamic sorting and filtering capabilities
+   - Real-time feedback and status updates
+   - Toggle between different data sources
 
-- Research, academia, journalism, and media professionals leverage web scraping for data collection, trend tracking, sentiment analysis, and investigative reporting.
+3. **Database Integration**
+   - SQLite integration for persistent data storage
+   - Save and load functionality
+   - Data source tracking for organization
+   - Transaction support for reliable data operations
 
-By mastering web scraping, professionals can extract data efficiently, outperform competitors, and drive data-informed success in diverse industries.
+## Project Structure
 
-## Prerequisites ✅
+### Game Class
+The `Game` class represents a video game or film with the following properties:
+- `name`: The title of the game/film
+- `rating`: User rating (out of 5)
+- `price`: Price in dollars
+- `category`: Genre or category (optional)
+- `description`: Brief description (optional)
 
-Before diving into this project, make sure you have the following tools and knowledge:
+This class includes:
+- Constructors for creating objects with different sets of attributes
+- Getters and setters for all properties
+- `toString()` method for readable string representation
+- `equals()` and `hashCode()` methods for proper object comparison
 
-### Tools Needed:
-- **Java 17 or higher** : Download the latest version from [Oracle's Java website](https://www.oracle.com/java/technologies/downloads/).
-- **Git** : Install Git, a powerful version control system, from [Git's official website](https://git-scm.com/downloads).
-- **Gradle** : Utilize Gradle (recommended version 7.6 or newer) as the build tool. You can find installation instructions [here](https://gradle.org/install/).
+### Parser Class
+The `Parser` class handles the core functionality:
+- HTML parsing and data extraction
+- Database operations
+- Sorting and filtering algorithms
+- GUI implementation
 
-### Knowledge Required:
-In addition to the tools mentioned above, familiarity with the following topics is crucial for successful project completion:
-- **Jsoup** : Understanding how to access, parse, and manipulate HTML files using Jsoup.
-- **HTML** : Knowledge of various HTML tags, their purposes, and how to identify and manipulate them using Jsoup.
-- **CSS** : Understanding how to style HTML elements, work with CSS classes, and utilize selectors efficiently.
+#### Key Methods:
+- `setUp()`: Parses HTML and extracts game data
+- `sortByName()`, `sortByRating()`, `sortByPrice()`: Different sorting algorithms
+- `filterByMinimumRating()`, `filterByPriceRange()`: Data filtering options
+- `scrapeOscarFilms()`: Extracts data from alternative sources
+- `createAndShowGUI()`: Builds and displays the interactive interface
+- Database methods: `setupDatabase()`, `saveGamesToDatabase()`, `loadGamesFromDatabase()`
 
-By having a solid grasp of these tools and concepts, you'll be well-equipped to excel in this project. 🚀
+## Dependencies
+- **JSoup (1.14.3)**: HTML parsing library
+- **SQLite JDBC (3.36.0.3)**: Database connectivity
+- **JUnit (5.8.1)**: For unit testing
+- **Java Swing**: For GUI components (part of Java standard library)
 
-## Objectives 🎯
+## How to Run
 
-The primary objectives of this assignment are:
+### Prerequisites
+- Java JDK 17 or higher
+- Gradle 7.6 or newer
+- Git (for version control)
 
-- Parsing an HTML file with video-game data.
-- Extracting relevant information such as price, rating, and other game attributes.
-- Implementing Java classes to represent games.
-- Utilizing JSoup for HTML parsing.
-- Applying sorting algorithms for organizing data by price, rating, and game name.
-- Displaying the sorted game information effectively.
+### Build Instructions
+1. Clone the repository:
+   ```
+   git clone <repository-url>
+   ```
 
-## Tasks 📝
+2. Navigate to the project directory:
+   ```
+   cd Fourth-Assignment-Steam-Scraper
+   ```
 
-1. **Set Up the Project:**
+3. Build the project using Gradle:
+   ```
+   gradle build
+   ```
 
-    - Start by cloning the repository to your local machine.
-    - Open the project in an IDE such as IntelliJ.
+### Run Instructions
+1. Execute the main class:
+   ```
+   gradle run
+   ```
+   Or run it directly from your IDE by executing the `main` method in the `Parser` class.
 
-2. **Integrate JSoup Dependency:**
+2. For the GUI interface, the application will automatically open a window after processing the initial HTML file.
 
-    - Include the JSoup dependency in your `build.gradle` file.
+## Code Explanation
 
-    ```gradle
-    dependencies {
+### HTML Parsing Logic
+The application uses JSoup to parse HTML from `Video_Games.html` located in the `src/Resources` directory. It looks for:
+- `div.game` elements for each game entry
+- `h3.game-name` for game titles
+- `span.game-rating` for rating information
+- `span.game-price` for price data
+- Additional tags for optional category and description information
 
-      testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+The parsing logic handles converting text values to appropriate data types (e.g., removing "/5" from ratings and currency symbols from prices).
 
-      testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+### Sorting Algorithms
+The application implements several sorting mechanisms using Java's `Comparator` interface:
+- Alphabetical sorting for names and categories
+- Descending sort for ratings (highest first)
+- Descending sort for prices (highest first)
 
-      implementation 'org.jsoup:jsoup:1.14.3'
+Each sorting method creates a new copy of the games list to avoid modifying the original data.
 
-    }
-    ```
+### Database Implementation
+The SQLite database integration provides persistent storage with:
+- Automatic table creation
+- Parameterized SQL statements to prevent injection
+- Transaction support for batch operations
+- Proper resource management with try-with-resources
+- Source tracking to distinguish different data origins
 
+### GUI Architecture
+The Swing-based GUI uses:
+- `JTable` for displaying game data
+- `JButton` components for sorting triggers
+- `JSlider` elements for range-based filtering
+- `JRadioButton` for data source selection
+- Status bar for user feedback
+- Nested panels with appropriate layouts for organized UI
 
-3. **Define the Country Class:**
+## Design Decisions
 
-    - Create a `Game` class in Java to encapsulate country-specific data.
+### Why Use SQLite?
+SQLite was chosen for its:
+- Lightweight nature (no separate server required)
+- Easy integration with Java applications
+- Support for ACID transactions
+- Single-file database for simplicity
 
-5. **HTML Parsing using JSoup:**
+### Component-Based Structure
+The code follows object-oriented principles with clear separation of concerns:
+- `Game` class focuses solely on data representation
+- `Parser` class handles data processing and interaction
+- Database operations are encapsulated in dedicated methods
+- GUI components are logically organized
 
-   Utilize JSoup to parse the HTML file located in the Resources folder at this path: `Fourth-Assignment-Steam-Scraper\src\Resources` and extract relevant information such as:
+### Error Handling
+The application implements robust error handling:
+- Appropriate exception catching and logging
+- Resource cleanup in finally blocks
+- Fallback options when data sources are unavailable
+- User-friendly error messages in the GUI
 
-    - `<span class="game-name">` = for game names
-    - `<span class="game-rating">` = for game ratings
-    - `<span class="game-price">` = for game prices
+## Future Enhancements
+- Web scraping capabilities for live data from online sources
+- Advanced filtering options with multiple criteria
+- Data visualization with charts and graphs
+- Export functionality to various formats (CSV, JSON, etc.)
+- Support for more media types beyond games and films
 
-   **Note: The span tags are nested within other tags and div closures.**
-
-6. **Implement Sorting Functionality:**
-
-    - Develop sorting algorithms for various criteria like rating, price, and name.
-
-8. **Visualize Results:**
-
-    - Clearly present the sorted game data.
-
-## Bonus Objectives (For Advanced Users) 🌟
-
-To enhance your project further:
-
-- Expand data extraction to additional websites, such as [Oscar Winning Films](https://www.scrapethissite.com/pages/ajax-javascript/).
-- Develop a user interface for interactive querying and sorting.
-- Utilize SQL or NoSQL databases to store the scraped data.
-
-## Notes 📝
-
-Here are some important points to keep in mind:
-
-- there is a `Help` folder located at the root directory of the project which contains the sorted games each by different priorities. It is there just so you can see what your output should look like in the end.
-- The unit tests are provided to assist you in understanding the project requirements. Your final grade is not solely dependent on their results; they are meant to aid your learning process. Remember to enable GitHub Actions for the test workflow to run on GitHub.
-- Feel free to leverage ChatGPT for learning web scraping and resolving any challenges that you may not find solutions to on the internet. Utilize its capabilities to enhance your understanding and overcome obstacles effectively.
-**but It is strictly prohibited to use ChatGPT or any other AI generative model for completing any section of this assignment. Failure to comply will result in a score of 0 without any warnings.**
-
-## Evaluation 🧐
-
-Your success will be judged based on:
-
-- Functionality of the code in parsing HTML, creating Java objects, and sorting data.
-- Readability and maintainability of the code.
-- Efficiency of sorting algorithms.
-- Clarity of the output format.
-
-## Submission 📁
-
-To share your work:
-
-1. Add your mentor as a contributor to the project.
-2. Create a `develop` branch for implementing features.
-3. Use Git for regular code commits.
-4. Push your code to the remote repository.
-5. Submit a pull request to merge the `develop` branch with `main`.
-
-The deadline for submitting your code is **Wednesday, April 23** (3th of Ordibehesht).
-
-If you have any further questions or need clarification, do not hesitate to reach out to your mentor. Good luck with your project! 🌟
-
-
-## Resources 📚
-
-- [Jsoup - Official website](https://jsoup.org/cookbook/)
-- [Jsoup - Javapoint](https://www.javatpoint.com/jsoup-tutorial)
-- [Jsoup - Baeldung](https://www.baeldung.com/java-with-jsoup)
-- [HTML - W3](https://www.w3schools.com/html/)
-- [CSS - W3](https://www.w3schools.com/css/default.asp)
-- [HTML & CSS - SuperSimpleDev](https://youtu.be/G3e-cpL7ofc?si=n7VZ6-SzUMqPgYH4)
-- [HTML & CSS - BroCode](https://youtu.be/HGTJBPNC-Gw?si=UIfbcK-raImMT129)
+## Conclusion
+This project demonstrates practical application of web scraping techniques, data manipulation, and user interface design in Java. The implementation of bonus features showcases additional capabilities in database integration and multi-source data extraction.
